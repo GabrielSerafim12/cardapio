@@ -218,16 +218,20 @@ function showToast(message) {
 
 function openQrDialog() {
   qrDialog.showModal();
-  currentUrl.textContent = window.location.href;
+  
+  // Definição correta do seu link do GitHub Pages (com apenas uma barra no final)
+  const siteUrl = "https://gabrielserafim12.github.io/cardapio/";
+  currentUrl.textContent = siteUrl;
+
   qrOutput.innerHTML = "";
   downloadQrButton.disabled = true;
 
   if (window.location.protocol === "file:") {
-    qrStatus.textContent = "Você abriu o arquivo diretamente. O QR Code apontará para este endereço local e não funcionará no celular de outra pessoa. Publique o site para gerar um QR Code público.";
+    qrStatus.textContent = "Você abriu o arquivo diretamente. O QR Code gerado usará o link público do GitHub.";
   } else if (["localhost", "127.0.0.1"].includes(window.location.hostname)) {
-    qrStatus.textContent = "Endereço local de teste: o QR Code não funcionará em outros celulares. Publique o site para gerar um QR Code público.";
+    qrStatus.textContent = "Endereço local de teste: o QR Code gerado usará o link público do GitHub.";
   } else {
-    qrStatus.textContent = "Este QR Code aponta para o endereço atual. Teste-o com outro celular antes de imprimir.";
+    qrStatus.textContent = "Este QR Code aponta para o cardápio online no GitHub. Teste-o com outro celular antes de imprimir.";
   }
 
   if (typeof QRCode === "undefined") {
@@ -235,14 +239,16 @@ function openQrDialog() {
     return;
   }
 
+  // Gerando o QR Code usando a variável siteUrl
   new QRCode(qrOutput, {
-    text: window.location.href,
+    text: siteUrl,
     width: 220,
     height: 220,
     colorDark: "#173f35",
     colorLight: "#ffffff",
     correctLevel: QRCode.CorrectLevel.H
   });
+
   window.setTimeout(() => {
     const canvas = qrOutput.querySelector("canvas");
     const image = qrOutput.querySelector("img");
