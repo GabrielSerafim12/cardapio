@@ -2,87 +2,10 @@
 // Troque o nome, os produtos e o telefone pelos dados do restaurante.
 // O telefone deve conter código do país + DDD + número, só com dígitos.
 // Exemplo Brasil: 5511999999999
-const RESTAURANT = {
-  name: "Sabor da Casa",
-  whatsapp: "5511945466384" // TROQUE pelo WhatsApp real antes de publicar.
-};
+
 
 // Para adicionar ou editar produtos, altere esta lista.
 // image aceita uma URL de imagem. Os exemplos usam fotos públicas do Unsplash.
-const products = [
-  {
-    id: 1,
-    name: "X-Burger da Casa",
-    description: "Hambúrguer artesanal, queijo derretido, alface e molho especial.",
-    price: 18.00,
-    category: "Lanches",
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=85",
-    tag: "Favorito"
-  },
-  {
-    id: 2,
-    name: "X-Salada",
-    description: "Hambúrguer, queijo, alface fresca, tomate e maionese da casa.",
-    price: 22.00,
-    category: "Lanches",
-    image: "https://images.unsplash.com/photo-1553979459-d2229ba7433a?auto=format&fit=crop&w=900&q=85",
-    tag: ""
-  },
-  {
-    id: 3,
-    name: "Batata crocante",
-    description: "Porção de batatas douradas, crocantes por fora e macias por dentro.",
-    price: 12.00,
-    category: "Porções",
-    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=900&q=85",
-    tag: ""
-  },
-  {
-    id: 4,
-    name: "Anéis de cebola",
-    description: "Anéis empanados e crocantes para dividir com a galera.",
-    price: 16.00,
-    category: "Porções",
-    image: "https://images.unsplash.com/photo-1639024471283-03518883512d?auto=format&fit=crop&w=900&q=85",
-    tag: ""
-  },
-  {
-    id: 5,
-    name: "Refrigerante gelado",
-    description: "Lata de refrigerante bem gelada para acompanhar seu pedido.",
-    price: 6.00,
-    category: "Bebidas",
-    image: "https://images.unsplash.com/photo-1581636625402-29b2a704ef13?auto=format&fit=crop&w=900&q=85",
-    tag: ""
-  },
-  {
-    id: 6,
-    name: "Suco natural",
-    description: "Suco refrescante feito para acompanhar sua refeição.",
-    price: 8.00,
-    category: "Bebidas",
-    image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=900&q=85",
-    tag: ""
-  },
-  {
-    id: 7,
-    name: "Brownie com chocolate",
-    description: "Brownie macio com sabor intenso de chocolate.",
-    price: 10.00,
-    category: "Sobremesas",
-    image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=900&q=85",
-    tag: ""
-  },
-  {
-    id: 8,
-    name: "Sorvete",
-    description: "Uma sobremesa gelada para fechar a refeição.",
-    price: 9.00,
-    category: "Sobremesas",
-    image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=900&q=85",
-    tag: ""
-  }
-];
 
 const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const productGrid = document.querySelector("#productGrid");
@@ -219,8 +142,21 @@ function showToast(message) {
 function openQrDialog() {
   qrDialog.showModal();
   
-  // Definição correta do seu link do GitHub Pages (com apenas uma barra no final)
-  const siteUrl = "https://gabrielserafim12.github.io/cardapio/";
+  // MUDANÇA AQUI: Pegamos a URL atual do navegador dinamicamente
+  // Se estiver no GitHub Pages ou em teste, isso garante que o ?loja=... seja incluído
+  let siteUrl = window.location.href;
+
+  // Opcional: Se você estiver testando localmente (Live Server) mas quiser que o QR Code 
+  // já aponte para o link do GitHub com a loja certa caso ela exista na URL:
+  const urlParams = new URLSearchParams(window.location.search);
+  const lojaAtual = urlParams.get("loja");
+
+  if (window.location.protocol === "file:" || ["localhost", "127.0.0.1"].includes(window.location.hostname)) {
+    // Se estiver testando no PC, montamos o link do GitHub simulando a loja atual
+    const baseGithub = "https://gabrielserafim12.github.io/cardapio/";
+    siteUrl = lojaAtual ? `${baseGithub}?loja=${lojaAtual}` : baseGithub;
+  }
+
   currentUrl.textContent = siteUrl;
 
   qrOutput.innerHTML = "";
@@ -229,9 +165,9 @@ function openQrDialog() {
   if (window.location.protocol === "file:") {
     qrStatus.textContent = "Você abriu o arquivo diretamente. O QR Code gerado usará o link público do GitHub.";
   } else if (["localhost", "127.0.0.1"].includes(window.location.hostname)) {
-    qrStatus.textContent = "Endereço local de teste: o QR Code gerado usará o link público do GitHub.";
+    qrStatus.textContent = "Endereço local de teste: o QR Code gerado usará o link público do GitHub com a loja atual.";
   } else {
-    qrStatus.textContent = "Este QR Code aponta para o cardápio online no GitHub. Teste-o com outro celular antes de imprimir.";
+    qrStatus.textContent = "Este QR Code aponta para o cardápio online no GitHub com esta loja ativa. Teste-o com outro celular antes de imprimir.";
   }
 
   if (typeof QRCode === "undefined") {
@@ -239,7 +175,7 @@ function openQrDialog() {
     return;
   }
 
-  // Gerando o QR Code usando a variável siteUrl
+  // Gerando o QR Code usando a variável siteUrl dinâmica
   new QRCode(qrOutput, {
     text: siteUrl,
     width: 220,
@@ -248,13 +184,15 @@ function openQrDialog() {
     colorLight: "#ffffff",
     correctLevel: QRCode.CorrectLevel.H
   });
+}
+
 
   window.setTimeout(() => {
     const canvas = qrOutput.querySelector("canvas");
     const image = qrOutput.querySelector("img");
     if (canvas || image) downloadQrButton.disabled = false;
   }, 100);
-}
+
 
 function downloadQr() {
   const canvas = qrOutput.querySelector("canvas");
@@ -304,5 +242,10 @@ document.querySelectorAll("[data-close]").forEach(button => {
   });
 });
 document.querySelector("#currentYear").textContent = new Date().getFullYear();
+
+if (RESTAURANT.themeClass) {
+    document.body.className = RESTAURANT.themeClass;
+    }
+    document.title = RESTAURANT.name;
 
 renderProducts();

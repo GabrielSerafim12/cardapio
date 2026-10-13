@@ -9,6 +9,26 @@
   --line: #e9e5db;
   --shadow: 0 12px 35px rgba(24, 45, 35, .08);
 }
+/* --- TEMAS PRONTOS PARA MÚLTIPLAS LANCHONETES --- */
+
+/* Tema Padrão (Sabor da Casa - Verde Esmeralda) */
+body.theme-emerald {
+  --green: #173f35;
+  --green-2: #235747;
+}
+
+/* Tema Burger (Vermelho clássico de lanchonete) */
+body.theme-burger {
+  --green: #c0392b;
+  --green-2: #962d22;
+}
+
+/* Tema Neon / Moderno (Roxo escuro) */
+body.theme-neon {
+  --green: #7c3aed;
+  --green-2: #6d28d9;
+}
+
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: "DM Sans", sans-serif; }
