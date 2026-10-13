@@ -195,19 +195,34 @@ function openQrDialog() {
 
 
 function downloadQr() {
+  function downloadQr() {
   const canvas = qrOutput.querySelector("canvas");
   const image = qrOutput.querySelector("img");
   let dataUrl = "";
-  if (canvas) dataUrl = canvas.toDataURL("image/png");
-  else if (image && image.src.startsWith("data:")) dataUrl = image.src;
+
+  if (canvas) {
+    dataUrl = canvas.toDataURL("image/png");
+  } else if (image && image.src) {
+    // Pegamos qualquer src válido que a biblioteca tenha inserido na imagem
+    dataUrl = image.src;
+  }
+
   if (!dataUrl) {
     showToast("O QR Code ainda não está pronto.");
     return;
   }
+
+  // Tenta extrair o nome da loja ativa para dar um nome personalizado ao arquivo
+  const urlParams = new URLSearchParams(window.location.search);
+  const lojaAtual = urlParams.get("loja") || "cardapio";
+
   const link = document.createElement("a");
   link.href = dataUrl;
-  link.download = "qr-code-cardapio.png";
+  link.download = `qrcode-${lojaAtual}.png`; // Baixa como "qrcode-burguer-do-ze.png"
+  document.body.appendChild(link);
   link.click();
+  document.body.removeChild(link);
+}
 }
 
 categoryList.addEventListener("click", event => {
