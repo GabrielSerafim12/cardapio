@@ -222,7 +222,7 @@ function downloadQr() {
   link.click();
   document.body.removeChild(link);
 }
-}
+
 
 categoryList.addEventListener("click", event => {
   const button = event.target.closest("[data-category]");
