@@ -183,6 +183,7 @@ function openQrDialog() {
     colorLight: "#ffffff",
     correctLevel: QRCode.CorrectLevel.H
   });
+  downloadQrButton.disabled = false;
 }
 
 
@@ -195,14 +196,17 @@ function openQrDialog() {
 
 function downloadQr() {
   const canvas = qrOutput.querySelector("canvas");
-  const image = qrOutput.querySelector("img");
+  const img = qrOutput.querySelector("img");
   let dataUrl = "";
 
   if (canvas) {
+    // Se gerou via canvas, pegamos os dados em base64
     dataUrl = canvas.toDataURL("image/png");
-  } else if (image && image.src) {
-    // Pegamos qualquer src válido que a biblioteca tenha inserido na imagem
-    dataUrl = image.src;
+  } else if (img) {
+    // Se gerou via tag img, garantimos que pegamos o src mesmo que demore um instante
+    if (img.src) {
+      dataUrl = img.src;
+    }
   }
 
   if (!dataUrl) {
@@ -210,13 +214,14 @@ function downloadQr() {
     return;
   }
 
-  // Tenta extrair o nome da loja ativa para dar um nome personalizado ao arquivo
+  // Descobre qual é a loja atual pela URL para colocar no nome do arquivo
   const urlParams = new URLSearchParams(window.location.search);
-  const lojaAtual = urlParams.get("loja") || "cardapio";
+  const lojaAtual = urlParams.get("loja") || "sabor-da-casa";
 
+  // Cria o link invisível para forçar o download com o nome dinâmico
   const link = document.createElement("a");
   link.href = dataUrl;
-  link.download = `qrcode-${lojaAtual}.png`; // Baixa como "qrcode-burguer-do-ze.png"
+  link.download = `qrcode-${lojaAtual}.png`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
