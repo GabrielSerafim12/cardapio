@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#173f35">
+  <meta name="description" content="Cardápio digital do Sabor da Casa. Confira nossos pratos e faça seu pedido.">
+  <title>Cardápio | Sabor da Casa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- A biblioteca gera o QR Code no navegador. Requer internet para carregar via CDN. -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <nav class="topbar container" aria-label="Navegação principal">
+      <a class="brand" href="#" aria-label="Sabor da Casa, início">
+        <span class="brand-mark" aria-hidden="true">SC</span>
+        <span>Sabor <em>da Casa</em></span>
+      </a>
+      <button class="qr-nav-button" id="openQrButton" type="button">
+        <span aria-hidden="true">▦</span> QR Code
+      </button>
+    </nav>
+
+    <div class="hero-content container">
+      <p class="eyebrow"><span class="status-dot"></span> FEITO COM CARINHO, SERVIDO COM SABOR</p>
+      <h1>Comida boa.<br><span>Momentos melhores.</span></h1>
+      <p class="hero-copy">Explore nosso cardápio e encontre seu próximo prato favorito.</p>
+      <a class="hero-cta" href="#cardapio">Ver cardápio <span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="hero-decoration decoration-one" aria-hidden="true"></div>
+    <div class="hero-decoration decoration-two" aria-hidden="true"></div>
+  </header>
+
+  <main>
+    <section class="menu-section container" id="cardapio">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow eyebrow-dark">ESCOLHA O SEU FAVORITO</p>
+          <h2>Nosso cardápio</h2>
+        </div>
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="Buscar no cardápio" aria-label="Buscar produtos">
+        </label>
+      </div>
+
+      <div class="category-list" id="categoryList" aria-label="Filtrar por categoria">
+        <button class="category-button active" type="button" data-category="Todos">Todos</button>
+        <button class="category-button" type="button" data-category="Lanches">Lanches</button>
+        <button class="category-button" type="button" data-category="Porções">Porções</button>
+        <button class="category-button" type="button" data-category="Bebidas">Bebidas</button>
+        <button class="category-button" type="button" data-category="Sobremesas">Sobremesas</button>
+      </div>
+
+      <div class="results-line">
+        <span id="resultsCount">Carregando produtos…</span>
+        <span class="demo-label">CARDÁPIO DEMONSTRATIVO</span>
+      </div>
+      <div class="product-grid" id="productGrid" aria-live="polite"></div>
+      <p class="empty-state hidden" id="emptyState">Não encontramos produtos com essa busca.</p>
+    </section>
+
+    <section class="callout container">
+      <div class="callout-icon" aria-hidden="true">♡</div>
+      <div>
+        <h2>Gostou de alguma coisa?</h2>
+        <p>Monte seu pedido e envie para a gente pelo WhatsApp.</p>
+      </div>
+      <button class="primary-button" id="viewOrderButton" type="button">Meu pedido <span id="cartCount">0</span></button>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a class="brand brand-footer" href="#"><span class="brand-mark" aria-hidden="true">SC</span><span>Sabor <em>da Casa</em></span></a>
+      <p>Feito para compartilhar. © <span id="currentYear"></span> Sabor da Casa</p>
+      <p class="footer-note">Exemplo de cardápio digital</p>
+    </div>
+  </footer>
+
+  <dialog class="modal" id="orderDialog" aria-labelledby="orderTitle">
+    <div class="modal-header">
+      <div><p class="eyebrow eyebrow-dark">SUA SELEÇÃO</p><h2 id="orderTitle">Meu pedido</h2></div>
+      <button class="icon-button" type="button" data-close="orderDialog" aria-label="Fechar">×</button>
+    </div>
+    <div id="orderItems" class="order-items"></div>
+    <div class="order-total"><span>Total estimado</span><strong id="orderTotal">R$ 0,00</strong></div>
+    <p class="small-note">O pedido será enviado ao restaurante para confirmação. Nenhum pagamento é realizado neste site.</p>
+    <button class="primary-button full-button" id="whatsappButton" type="button">Enviar pedido pelo WhatsApp ↗</button>
+    <button class="text-button full-button" type="button" data-close="orderDialog">Continuar escolhendo</button>
+  </dialog>
+
+  <dialog class="modal qr-modal" id="qrDialog" aria-labelledby="qrTitle">
+    <div class="modal-header">
+      <div><p class="eyebrow eyebrow-dark">COMPARTILHE O CARDÁPIO</p><h2 id="qrTitle">QR Code do cardápio</h2></div>
+      <button class="icon-button" type="button" data-close="qrDialog" aria-label="Fechar">×</button>
+    </div>
+    <p class="qr-explainer">Depois de publicar este site, gere e baixe um QR Code com o endereço público do cardápio.</p>
+    <div class="qr-output" id="qrOutput"><span>O QR Code aparecerá aqui.</span></div>
+    <p class="current-url" id="currentUrl"></p>
+    <p class="small-note" id="qrStatus">O QR Code usa o endereço atual desta página.</p>
+    <button class="primary-button full-button" id="downloadQrButton" type="button" disabled>Baixar QR Code PNG</button>
+    <button class="text-button full-button" type="button" data-close="qrDialog">Fechar</button>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
