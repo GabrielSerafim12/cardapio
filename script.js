@@ -81,7 +81,6 @@ function renderOrder() {
   const items = [...cart.entries()]
     .map(([id, quantity]) => ({ product: products.find(product => product.id === id), quantity }))
     .filter(item => item.product);
-
   if (items.length === 0) {
     orderItems.innerHTML = '<p class="small-note">Seu pedido está vazio. Adicione algum produto do cardápio.</p>';
   } else {
