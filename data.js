@@ -107,10 +107,9 @@ const stores = {
   }
 };
 
-// Pega o parâmetro 'loja' da URL (ex: ?loja=burguer-do-ze)
 const urlParams = new URLSearchParams(window.location.search);
 const storeKey = urlParams.get("loja") || "sabor-da-casa";
 
-// Define a loja ativa e os produtos com base na URL
+// Garante que se a loja não existir, ele carrega a 'sabor-da-casa' como padrão
 const RESTAURANT = stores[storeKey] || stores["sabor-da-casa"];
-const products = RESTAURANT.products;
+const products = RESTAURANT ? RESTAURANT.products : [];

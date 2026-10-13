@@ -195,7 +195,6 @@ function openQrDialog() {
 
 
 function downloadQr() {
-  function downloadQr() {
   const canvas = qrOutput.querySelector("canvas");
   const image = qrOutput.querySelector("img");
   let dataUrl = "";
